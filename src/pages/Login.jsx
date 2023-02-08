@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 const Login = () => {
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
-  const [alert,setAlert] = useState('');
+  const [alert,setAlert] = useState({error: false, msg: ''});
 
   const {setAuth} = useAuth();
   
@@ -15,22 +15,17 @@ const Login = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    if([email,password].includes('')){
-      setAlert({error:true,msg:'All fields are required'});
-      return;
-    }
     try {
       const response = await clientAxios.post('/user/login',{email,password});
-      setAlert({error:false, msg:response.data.msg});
       localStorage.setItem('token',response.data.token);
       setAuth(response.data);
       navigate('/admin');
     } catch (error) {
-      if(error.response.data.msg){
-        setAlert({error:true, msg:error.response.data.msg});
+      if(!error.response || !error.response.data.msg){
+        setAlert({error:true, msg:'Internal server error'});
         return;
       }
-      setAlert({error:true, msg:'Internal server error!'});
+      setAlert({error:true, msg:error.response.data.msg});
     }
   }
   
@@ -46,6 +41,7 @@ const Login = () => {
                 placeholder="Email" 
                 className="border border-gray-400 rounded p-2 w-full"
                 onChange={e => setEmail(e.target.value)}
+                required
               />
             </div>
             <div className="mb-5">
@@ -54,11 +50,12 @@ const Login = () => {
                 placeholder="Password" 
                 className="border border-gray-400 rounded p-2 w-full"
                 onChange={e => setPassword(e.target.value)}
+                required
               />
             </div>
-            {
-              alert && alert !== '' && <Alert alert={alert}></Alert>
-            }
+            <Alert 
+              errorObj={alert}
+            />
             <Link 
               to="/forgotpassword" 
               className="text-orange-500">

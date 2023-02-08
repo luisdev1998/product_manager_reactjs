@@ -7,7 +7,7 @@ import clientAxios from "../config/axios";
 const ConfirmAccount = () => {
   const params = useParams();
   const { token } = params;
-  const [  alert,setAlert ] = useState({});
+  const [alert,setAlert] = useState({error: false, msg: ''});
 
   useEffect(()=>{
     const confirmAccount = async () => {
@@ -15,11 +15,11 @@ const ConfirmAccount = () => {
         const {data} = await clientAxios(`/user/confirm/${token}`);
         setAlert({error:false,msg:data.msg});
       } catch (error) {
-        if(error.response.data.msg){
-          setAlert({error:true, msg:error.response.data.msg});
+        if(!error.response || !error.response.data.msg){
+          setAlert({error:true, msg:'Internal server error'});
           return;
         }
-        setAlert({error:true, msg:'Internal server error!'});
+        setAlert({error:true, msg:error.response.data.msg});
       }
     }
     confirmAccount();
@@ -27,17 +27,13 @@ const ConfirmAccount = () => {
 
   return (
     <>
+      <Alert 
+        errorObj={alert}
+      />
       <div className="w-full max-w-sm">
         <div className="bg-white rounded-xl shadow-2xl p-10">
           <h1 className="text-orange-500 text-3xl text-center mb-5">Confirm Your Account</h1>
           <form>
-            
-            {
-              alert && alert.msg ? 
-                <Alert
-                alert={alert}>
-                </Alert>  : ''
-            } 
             <div className="text-center">
               <label className="text-gray-700">
                 If your account was confirmed, login in <Link to="/" className="text-orange-600 underline">Here!</Link>

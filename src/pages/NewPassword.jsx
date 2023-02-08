@@ -9,7 +9,7 @@ const NewPassword = () => {
   const {token} = params;
   const [password,setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [alert,setAlert] = useState('');
+  const [alert,setAlert] = useState({error: false, msg: ''});
   const [correctToken, setCorrectToken] = useState(false);
 
   useEffect(()=>{
@@ -19,11 +19,11 @@ const NewPassword = () => {
         setAlert({error:false,msg:'Insert your new Password'});
         setCorrectToken(true);
       } catch (error) {
-        if(error.response.data.msg){
-          setAlert({error:true, msg:error.response.data.msg});
+        if(!error.response || !error.response.data.msg){
+          setAlert({error:true, msg:'Internal server error'});
           return;
         }
-        setAlert({error:true, msg:'Internal server error!'});
+        setAlert({error:true, msg:error.response.data.msg});
       }
     }
     verifyToken();
@@ -49,26 +49,24 @@ const NewPassword = () => {
         const response = await clienAxios.post(`/user/forgetPassword/${token}`,{password});
         setAlert({error:false,msg:response.data.msg});
       } catch (error) {
-        if(error.response.data.msg){
-          setAlert({error:true, msg:error.response.data.msg});
+        if(!error.response || !error.response.data.msg){
+          setAlert({error:true, msg:'Internal server error'});
           return;
         }
-        setAlert({error:true, msg:'Internal server error!'});
+        setAlert({error:true, msg:error.response.data.msg});
       }
     }
   }
 
   return (
     <>
+      <Alert 
+        errorObj={alert}
+      />
       <div className="w-full max-w-sm">
         <div className="bg-white rounded-xl shadow-2xl p-10">
           <h1 className="text-orange-500 text-3xl text-center mb-5">Reset your Password</h1>
           <form onSubmit={handleSubmit}>
-            {alert && alert.msg ? 
-              <Alert
-              alert={alert}>
-              </Alert>  : ''
-            }
             <div className="mb-5">
               <input 
                 type="password" 

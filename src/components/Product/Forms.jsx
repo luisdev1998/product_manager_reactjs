@@ -7,7 +7,6 @@ const Forms = ({categories,saveProduct,saveCategory,alert}) => {
     return (
         <>
             {/*************** ALERT ***************/}
-            { alert && alert.msg ? <Alert alert={alert}> </Alert>  : '' }
             <div className="mb-4 md:flex md:justify-end md:space-x-2 max-md:grid max-md:grid-rows-2 max-md:space-y-2">
                 <button 
                 className=" bg-green-600 rounded-md p-2 text-white shadow-xl text-sm font-bold"

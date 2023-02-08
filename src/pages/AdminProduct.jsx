@@ -17,12 +17,14 @@ function AdminProduct() {
 
   return (
     <div>
+      <Alert 
+        errorObj={alert}
+      />
       {/*************** CARDS ***************/}
       <Cards products={products} categories={categories}/>
       {/*************** BUTTONS AND MODALS ***************/}
       <Forms categories={categories} saveProduct={saveProduct} saveCategory={saveCategory}/>
       {/*************** ALERT ***************/}
-      { alert && alert.msg ? <Alert alert={alert}> </Alert>  : '' }
       {/*************** TABLE ***************/}
       <TableProducts products={products} deleteProduct={deleteProduct}/>
     </div>

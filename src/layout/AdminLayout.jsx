@@ -10,7 +10,7 @@ import React, { useState } from "react";
 const AdminLayout = () => {
 
     const {auth,loading} =useAuth();
-    const [showSidebar, setShowSidebar] = useState(true);
+    const [showSidebar, setShowSidebar] = useState(false);
 
     if(loading) return 'cargando'
     return (

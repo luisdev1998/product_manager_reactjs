@@ -8,7 +8,7 @@ export const ProductsProvider = ({children}) => {
     const [products,setProducts] = useState([]);
     const [categories,setCagegories] = useState([]);
 
-    const [alert, setAlert] = useState({});
+    const [alert,setAlert] = useState({error: false, msg: ''});
     const [alertTimeout, setAlertTimeout] = useState(null);
 
     const { auth } =  useAuth();
